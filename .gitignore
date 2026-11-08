@@ -1,0 +1,15 @@
+@'
+
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+.streamlit/secrets.toml
+.agents/
+.codex/
+.impeccable/
+data/raw/
+uploads/
+outputs/
+'@ | Add-Content -LiteralPath ".gitignore" -Encoding ascii
