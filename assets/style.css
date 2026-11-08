@@ -1,0 +1,32 @@
+:root { color-scheme: dark; }
+html, body, [data-testid="stApp"] { font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+::selection { background: #fff; color: #000; }
+[data-testid="stMainBlockContainer"] { max-width: 1400px; padding-top: 3rem; padding-bottom: 4rem; }
+[data-testid="stApp"] h1 { color: #fff; font-size: 2rem; font-weight: 700; line-height: 1.25; letter-spacing: -.03em; text-wrap: balance; word-break: keep-all; }
+[data-testid="stApp"] h2 { font-size: 1.5rem; word-break: keep-all; }
+[data-testid="stApp"] h2, [data-testid="stApp"] h3 { color: #fff; letter-spacing: -.02em; }
+p { line-height: 1.7; }
+[data-testid="stCaptionContainer"] { color: #bbbbbb; }
+[data-testid="stSidebar"] { border-right: 1px solid #3c3c3c; }
+[data-testid="stFileUploaderDropzone"] { border-radius: 0; border: 1px dashed #888; }
+.stButton button, .stDownloadButton button { border-radius: 0; min-height: 48px; transition: background-color 160ms ease, transform 160ms ease; }
+.stButton button[kind="primary"] { background: transparent; color: #fff; border: 1px solid #fff; }
+.stButton button:hover:not(:disabled), .stDownloadButton button:hover:not(:disabled) { background: #262626; color: #fff; border-color: #fff; }
+.stButton button:active:not(:disabled), .stDownloadButton button:active:not(:disabled) { transform: translateY(1px); }
+button:focus-visible, a:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid #fff !important; outline-offset: 3px; }
+[data-testid="stMetricValue"] { font-variant-numeric: tabular-nums; }
+[data-testid="stChatMessage"] { border-radius: 0; }
+[data-testid="stChatInput"] { border-radius: 0; caret-color: #fff; }
+hr { border-color: #3c3c3c; }
+@media (min-width: 1024px) {
+  [data-testid="stApp"] h1.landing-title { font-size: 3.5rem; margin-top: 1.5rem; }
+}
+@media (max-width: 767px) {
+  [data-testid="stMainBlockContainer"] { padding: 1.5rem 1rem 3rem; }
+  [data-testid="stHorizontalBlock"] { flex-wrap: wrap; }
+  [data-testid="stColumn"] { min-width: min(100%, 260px); }
+  .stButton button, .stDownloadButton button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
