@@ -180,8 +180,13 @@ TOOLS = [
 
 
 def assistant(state):
+    choice = "auto"
+    if state["rounds"] >= 2 or PRIVATE_REQUEST.search(state["question"]):
+        choice = "none"
+    elif state["rounds"] == 0 and len(student_references(state["question"], state["result"])) == 1:
+        choice = {"type": "function", "name": "get_student_result"}
     response = request(state, ChatReply, state["messages"], 1600, tools=TOOLS,
-                       tool_choice="none" if state["rounds"] >= 2 or PRIVATE_REQUEST.search(state["question"]) else "auto")
+                       tool_choice=choice)
     calls = [item for item in response.output if item.type == "function_call"]
     updates = {"messages": state["messages"] + list(response.output), "calls": calls,
                "api_calls": state["api_calls"] + 1, "model_used": response.model}

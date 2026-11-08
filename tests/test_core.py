@@ -139,6 +139,23 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(reply["api_calls"], 2)
         self.assertEqual(reply["model_used"], "test-model")
         self.assertEqual(reply["last_student"], "900학생")
+        self.assertEqual(api.call_args_list[0].kwargs["tool_choice"], {"type": "function", "name": "get_student_result"})
+        self.assertEqual(api.call_args_list[1].kwargs["tool_choice"], "auto")
+
+    def test_repeated_student_question_refreshes_subject_before_pronoun(self):
+        history = [{"role":"user", "content":"900학생 점수는?"},
+                   {"role":"assistant", "content":"900학생은 5점입니다."},
+                   {"role":"user", "content":"학생 901은?"},
+                   {"role":"assistant", "content":"901학생은 0점입니다."}]
+        with patch("agent.request", side_effect=[tool_response("get_student_result", {"student_name":"900학생"}),
+                    final_response("900학생은 5점입니다.", "900학생"),
+                    tool_response("get_student_result", {"student_name":"901학생"}),
+                    final_response("900학생은 오답이 없습니다.", "900학생")]) as api:
+            reply = answer_question("900번은 몇 점이야?", sample_result(), b"", history, "test", last_student="901학생")
+            followup = answer_question("그 학생의 오답은?", sample_result(), b"", history, "test", last_student=reply["last_student"])
+        self.assertEqual(api.call_args_list[0].kwargs["tool_choice"], {"type": "function", "name": "get_student_result"})
+        self.assertEqual(json.loads(api.call_args_list[3].args[2][-1]["output"])["student"], "900학생")
+        self.assertEqual(followup["last_student"], "900학생")
 
     def test_weakness_and_explicit_correction_keep_903(self):
         result = sample_result()
