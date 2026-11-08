@@ -34,9 +34,12 @@ show_message({"role":"assistant", "content":"새 문제입니다.", "exercise": 
                 patch("agent.request", side_effect=[tool_response("get_student_result", {"student_name":"900학생"}),
                     final_response("900학생은 5점입니다.", "900학생"),
                     tool_response("get_student_result", {"student_name":"900학생"}),
-                    final_response("900학생은 5점입니다.", "900학생")]):
+                    final_response("901학생은 0점입니다.", "901학생"),
+                    tool_response("get_student_result", {"student_name":"900학생"}),
+                    final_response("901학생은 0점입니다.", "901학생")]):
             at = AppTest.from_string("from app import workspace\nworkspace()", default_timeout=20)
             at.secrets["OPENAI_API_KEY"] = "test"
+            at.session_state["chat_engine_version"] = 2
             at.session_state["last_student"] = "909학생"
             at.session_state["messages"] = [{"role":"user", "content":"903학생 분석해줘"}]
             at.run()
@@ -55,8 +58,12 @@ show_message({"role":"assistant", "content":"새 문제입니다.", "exercise": 
             self.assertEqual(at.session_state["messages"][-1]["api_calls"], 2)
             self.assertTrue(any("OpenAI · test-model · 2회" in c.value for c in at.caption))
             at.session_state["last_request"] = 0
+            at.chat_input[0].set_value("학생 901은 몇 점이야?").run()
+            self.assertIn("901학생은 0점", at.session_state["messages"][-1]["content"])
+            self.assertEqual(at.session_state["last_student"], "901학생")
+            at.session_state["last_request"] = 0
             at.chat_input[0].set_value("그 학생 점수 다시 알려줘").run()
-            self.assertIn("900학생", at.session_state["messages"][-1]["content"])
+            self.assertIn("901학생", at.session_state["messages"][-1]["content"])
             uploads["문제지 PDF"] = b"changed"
             at.run()
             self.assertTrue(at.chat_input[0].disabled)

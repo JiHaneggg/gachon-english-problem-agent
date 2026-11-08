@@ -81,8 +81,8 @@ def workspace():
     st.session_state.setdefault("session_id", str(uuid4()))
     st.session_state.setdefault("messages", [])
     # 이전 규칙 분기가 잘못 저장한 학생 참조만 초기화하고 대화·채점 결과는 보존한다.
-    if st.session_state.get("chat_engine_version") != 2:
-        st.session_state.update(chat_engine_version=2, last_student=None)
+    if st.session_state.get("chat_engine_version") != 3:
+        st.session_state.update(chat_engine_version=3, last_student=None)
     with st.sidebar:
         st.image(str(ROOT / "assets/gachon-logo.png"), width=64)
         st.header("시험 파일")
